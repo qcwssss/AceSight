@@ -22,6 +22,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
+import BackgroundImage from './assets/background.png';
 
 // --- Helper for smooth scrolling ---
 const scrollToSection = (id: string) => {
@@ -32,7 +33,7 @@ const scrollToSection = (id: string) => {
 };
 
 const NotificationBanner = () => (
-  <div className="fixed top-0 left-0 right-0 z-[60] bg-[#dfff00]/90 backdrop-blur-md text-slate-950 px-4 py-2 font-bold text-center text-xs md:text-sm uppercase tracking-wider">
+  <div className="relative z-[60] bg-[#dfff00] text-slate-950 px-4 py-2 font-bold text-center text-xs md:text-sm uppercase tracking-wider">
     🚀 Concept Preview: The AceSight AI engine is currently in development. Join the waitlist for exclusive early access.
   </div>
 );
@@ -40,7 +41,7 @@ const NotificationBanner = () => (
 // --- Sub-components ---
 
 const Navbar = () => (
-  <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-slate-950/80 backdrop-blur-md border-b border-white/10">
+  <nav className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-slate-950/80 backdrop-blur-md border-b border-white/10">
     <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
       <div className="w-8 h-8 tennis-gradient rounded-full flex items-center justify-center">
         <Target className="text-slate-950 w-5 h-5" />
@@ -75,16 +76,23 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: any, title: str
 
 interface AnalysisResults {
   ntrpLevel: string;
-  footworkScore: number;
-  postureScore: number;
-  swingEfficiency: number;
+  footworkScore: string;
+  postureScore: string;
+  swingEfficiency: string;
+  courtSpeed: string;
+  consistency: string;
   improvementAreas: string[];
   guidance: string;
 }
 
-const AnalysisStudio = () => {
+interface AnalysisStudioProps {
+  results: AnalysisResults | null;
+  setResults: (results: AnalysisResults | null) => void;
+}
+
+const AnalysisStudio = ({ results, setResults }: AnalysisStudioProps) => {
   const [analyzing, setAnalyzing] = useState(false);
-  const [results, setResults] = useState<AnalysisResults | null>(null);
+  const [showDevMessage, setShowDevMessage] = useState(false);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -114,9 +122,11 @@ const AnalysisStudio = () => {
             type: Type.OBJECT,
             properties: {
               ntrpLevel: { type: Type.STRING },
-              footworkScore: { type: Type.NUMBER },
-              postureScore: { type: Type.NUMBER },
-              swingEfficiency: { type: Type.NUMBER },
+              footworkScore: { type: Type.STRING },
+              postureScore: { type: Type.STRING },
+              swingEfficiency: { type: Type.STRING },
+              courtSpeed: { type: Type.STRING },
+              consistency: { type: Type.STRING },
               improvementAreas: { type: Type.ARRAY, items: { type: Type.STRING } },
               guidance: { type: Type.STRING }
             }
@@ -135,9 +145,11 @@ const AnalysisStudio = () => {
       // Fallback data if API fails or isn't configured
       setResults({
         ntrpLevel: "3.5",
-        footworkScore: 78,
-        postureScore: 82,
-        swingEfficiency: 74,
+        footworkScore: "3.5",
+        postureScore: "4.0",
+        swingEfficiency: "3.0",
+        courtSpeed: "3.0",
+        consistency: "3.5",
         improvementAreas: ["Recovery stride timing", "Core rotation on forehand", "Split-step consistency"],
         guidance: "Focus on staying lower through your weight transfer. Your recovery after the wide ball is slightly delayed by inconsistent small adjustment steps."
       });
@@ -167,10 +179,40 @@ const AnalysisStudio = () => {
               onChange={handleFileUpload}
             />
             <div 
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => !showDevMessage && setShowDevMessage(true)}
               className={`aspect-video rounded-[2.5rem] border-2 border-dashed border-white/10 bg-white/5 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-[#dfff00]/50 hover:bg-white/10 overflow-hidden relative ${videoPreview ? 'border-solid border-[#dfff00]/30' : ''}`}
             >
-              {videoPreview ? (
+              {showDevMessage ? (
+                <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl flex flex-col items-center justify-center p-8 text-center animate-in fade-in zoom-in duration-300">
+                  <div className="w-16 h-16 rounded-full bg-[#dfff00]/10 flex items-center justify-center mb-6">
+                    <Activity className="w-8 h-8 text-[#dfff00]" />
+                  </div>
+                  <h3 className="text-2xl font-black uppercase italic mb-3">Early Development</h3>
+                  <p className="text-slate-400 text-sm max-w-[280px] mb-8 leading-relaxed">
+                    Our AI movement engine is currently in private alpha. Join the waitlist to be first in line when we launch.
+                  </p>
+                  <div className="flex flex-col gap-3 w-full max-w-[240px]">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        scrollToSection('waitlist-section');
+                      }}
+                      className="w-full py-4 tennis-gradient text-slate-950 font-black rounded-2xl text-xs uppercase tracking-widest hover:scale-105 transition-transform"
+                    >
+                      Join waitlist
+                    </button>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDevMessage(false);
+                      }}
+                      className="text-xs text-slate-500 font-bold hover:text-white transition-colors"
+                    >
+                      Back
+                    </button>
+                  </div>
+                </div>
+              ) : videoPreview ? (
                 <>
                   <video src={videoPreview} autoPlay loop muted className="absolute inset-0 w-full h-full object-cover opacity-60" />
                   <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center p-8 text-center">
@@ -232,15 +274,15 @@ const AnalysisStudio = () => {
                 <div className="grid grid-cols-3 gap-4">
                   <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
                     <div className="text-[8px] uppercase font-bold text-slate-500 mb-2">Footwork</div>
-                    <div className="text-xl font-black">{results?.footworkScore}%</div>
+                    <div className="text-xl font-black">{results?.footworkScore}</div>
                   </div>
                   <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
                     <div className="text-[8px] uppercase font-bold text-slate-500 mb-2">Posture</div>
-                    <div className="text-xl font-black">{results?.postureScore}%</div>
+                    <div className="text-xl font-black">{results?.postureScore}</div>
                   </div>
                   <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
                     <div className="text-[8px] uppercase font-bold text-slate-500 mb-2">Swing</div>
-                    <div className="text-xl font-black">{results?.swingEfficiency}%</div>
+                    <div className="text-xl font-black">{results?.swingEfficiency}</div>
                   </div>
                 </div>
 
@@ -281,6 +323,7 @@ const AnalysisStudio = () => {
 
 const WaitlistSection = () => {
   const [email, setEmail] = useState('');
+  const [featureInterest, setFeatureInterest] = useState('');
   const [willPay, setWillPay] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -290,9 +333,29 @@ const WaitlistSection = () => {
     if (!email || willPay === null) return;
 
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setSubmitted(true);
+    
+    try {
+      const response = await fetch(import.meta.env.VITE_SHEET_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain', // Use text/plain to avoid CORS preflight issues with Apps Script
+        },
+        body: JSON.stringify({
+          email,
+          willPay,
+          featureInterest
+        }),
+        mode: 'no-cors' // Apps Script requires no-cors for simple POST
+      });
+      
+      // Since mode is 'no-cors', we can't read the response, but we assume success if no error is thrown
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Submission failed:', error);
+      alert('Something went wrong. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -343,7 +406,7 @@ const WaitlistSection = () => {
 
           <div className="max-w-lg mx-auto bg-black/40 p-8 rounded-3xl border border-white/5 shadow-inner">
             <p className="text-sm font-bold text-slate-300 mb-6 text-center uppercase tracking-widest">
-              Would you pay for a premium AI coach to improve your game?
+              Would you pay for premium AI video analysis to receive actionable feedback and technical advice?
             </p>
             <div className="grid grid-cols-2 gap-4">
               <button 
@@ -369,6 +432,16 @@ const WaitlistSection = () => {
                 FREE VERSION ONLY
               </button>
             </div>
+          </div>
+
+          <div className="max-w-md mx-auto relative group">
+            <input 
+              type="text" 
+              value={featureInterest}
+              onChange={(e) => setFeatureInterest(e.target.value)}
+              placeholder="What feature do you want most? (Optional)"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-[#dfff00] focus:ring-4 focus:ring-[#dfff00]/10 transition-all text-center text-lg font-medium placeholder:text-slate-600"
+            />
           </div>
 
           <div className="text-center pt-4">
@@ -397,9 +470,10 @@ const WaitlistSection = () => {
 
 const App: React.FC = () => {
   const [profileImgFailed, setProfileImgFailed] = useState(false);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
 
   return (
-    <div className="min-h-screen bg-slate-950 selection:bg-[#dfff00] selection:text-slate-950 pt-10">
+    <div className="min-h-screen bg-slate-950 selection:bg-[#dfff00] selection:text-slate-950">
       <NotificationBanner />
       <Navbar />
 
@@ -437,8 +511,8 @@ const App: React.FC = () => {
           <div className="mt-24 relative max-w-5xl mx-auto group">
             <div className="absolute -inset-1 bg-gradient-to-r from-[#dfff00] to-green-500 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
             <div className="relative aspect-video rounded-[2.5rem] overflow-hidden border border-white/10 bg-slate-900 shadow-2xl grid-bg">
-              <img 
-                src="https://images.unsplash.com/photo-1595435066041-3705353160a0?q=80&w=2070&auto=format&fit=crop" 
+                <img 
+                src={BackgroundImage} 
                 alt="Tennis Movement Analysis" 
                 className="w-full h-full object-cover opacity-40 grayscale group-hover:grayscale-0 transition-all duration-1000"
               />
@@ -464,7 +538,7 @@ const App: React.FC = () => {
                      <span className="text-8xl font-black italic tracking-tighter">3.5</span>
                      <div className="flex items-center gap-1 bg-black/10 px-3 py-1 rounded-full mt-4">
                         <CheckCircle2 className="w-3 h-3" />
-                        <span className="text-[10px] font-black uppercase tracking-wider">NTRP Movement Cert</span>
+                        <span className="text-[10px] font-black uppercase tracking-wider">NTRP Rating</span>
                      </div>
                   </div>
 
@@ -501,7 +575,7 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      <AnalysisStudio />
+      <AnalysisStudio results={analysisResults} setResults={setAnalysisResults} />
 
       {/* Movement Engine: Details */}
       <section id="movement-engine" className="py-32 px-6 bg-slate-900/20 scroll-mt-24">
@@ -555,32 +629,52 @@ const App: React.FC = () => {
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">AceProfile</span>
                   </div>
-                  <div className="text-center mb-8">
-                    <div className="w-24 h-24 rounded-full border-4 border-[#dfff00] mx-auto mb-4 overflow-hidden shadow-xl bg-slate-800">
-                      {!profileImgFailed ? (
+                  <div className="flex items-center gap-4 mb-10">
+                    <div className="w-16 h-16 rounded-full border-2 border-[#dfff00] overflow-hidden shadow-xl bg-slate-800 shrink-0">
+                      {!profileImgFailed && !analysisResults ? (
                         <img 
                           src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop" 
                           alt="User" 
                           onError={() => setProfileImgFailed(true)}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[#dfff00] font-black text-2xl">AC</div>
+                        <div className="w-full h-full flex items-center justify-center text-[#dfff00] font-black text-lg">
+                          {analysisResults ? "YOU" : "AC"}
+                        </div>
                       )}
                     </div>
-                    <h4 className="text-2xl font-black uppercase tracking-tight">ALEXA CHENG</h4>
-                    <p className="text-xs text-slate-500 font-bold tracking-widest uppercase text-center">Movement Grade: A-</p>
+                    <div>
+                      <h4 className="text-xl font-black uppercase tracking-tight leading-none mb-1">
+                        {analysisResults ? "YOUR ANALYSIS" : "ALEXA CHENG"}
+                      </h4>
+                      <div className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">Verified Player</div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 mt-8">
-                     <div className="bg-white/5 p-3 rounded-xl text-center">
-                        <div className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Court Speed</div>
-                        <div className="text-sm font-bold text-white">Top 15%</div>
+
+                  <div className="text-center py-10 bg-[#dfff00]/5 rounded-[3rem] border border-[#dfff00]/10 mb-10 group-hover:bg-[#dfff00]/10 transition-colors">
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-4 block">AceSights NTRP Rating</span>
+                    <div className="text-8xl font-black italic text-[#dfff00] tracking-tighter leading-none mb-4">
+                      {analysisResults?.ntrpLevel || "4.5"}
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 bg-[#dfff00] text-slate-950 px-4 py-1.5 rounded-full hover:scale-105 transition-transform">
+                       <CheckCircle2 className="w-3.5 h-3.5" />
+                       <span className="text-[10px] font-black uppercase tracking-widest">Certified</span>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center px-4 mb-2 opacity-50 group-hover:opacity-100 transition-opacity">
+                     <div className="text-center">
+                        <div className="text-[8px] text-slate-500 font-black uppercase tracking-widest mb-1">Court Speed</div>
+                        <div className="text-lg font-black text-white">{analysisResults?.courtSpeed || "5.0"}</div>
                      </div>
-                     <div className="bg-white/5 p-3 rounded-xl text-center">
-                        <div className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Consistency</div>
-                        <div className="text-sm font-bold text-white">Top 40%</div>
+                     <div className="w-px h-8 bg-white/10" />
+                     <div className="text-center">
+                        <div className="text-[8px] text-slate-500 font-black uppercase tracking-widest mb-1">Consistency</div>
+                        <div className="text-lg font-black text-white">{analysisResults?.consistency || "4.0"}</div>
                      </div>
                   </div>
-                  <button className="w-full mt-10 py-5 bg-[#dfff00] text-slate-950 font-black rounded-2xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform cursor-pointer">
+
+                  <button className="w-full mt-8 py-5 bg-[#dfff00] text-slate-950 font-black rounded-2xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-xl shadow-[#dfff00]/10">
                     <Share2 className="w-5 h-5" /> SHARE PROGRESS
                   </button>
                 </div>
@@ -600,7 +694,7 @@ const App: React.FC = () => {
             <span className="text-2xl font-black tracking-tighter uppercase italic">AceSight</span>
           </div>
           <p className="text-slate-500 text-sm mb-10 max-w-sm mx-auto leading-relaxed">
-            Revolutionizing tennis movement training through the power of Google Gemini AI. Movement intelligence for everyone.
+            Revolutionizing tennis training through the power of most Advanced AI models. Swing intelligence for everyone.
           </p>
           <div className="mt-16 text-[10px] text-slate-800 font-bold uppercase tracking-widest">
             © 2025 ACESIGHT MOVEMENT LAB. ALL RIGHTS RESERVED.
