@@ -8,9 +8,9 @@ function doPost(e) {
   }
   
   sheet.appendRow([
-    new Date(),
+    data.timestamp || new Date(),
     data.email,
-    data.willPay ? 'Yes' : 'No',
+    data.willPay === true ? 'Yes' : 'No',
     data.featureInterest || ''
   ]);
   
