@@ -31,6 +31,12 @@ const scrollToSection = (id: string) => {
   }
 };
 
+const NotificationBanner = () => (
+  <div className="fixed top-0 left-0 right-0 z-[60] bg-[#dfff00]/90 backdrop-blur-md text-slate-950 px-4 py-2 font-bold text-center text-xs md:text-sm uppercase tracking-wider">
+    🚀 Concept Preview: The AceSight AI engine is currently in development. Join the waitlist for exclusive early access.
+  </div>
+);
+
 // --- Sub-components ---
 
 const Navbar = () => (
@@ -39,7 +45,7 @@ const Navbar = () => (
       <div className="w-8 h-8 tennis-gradient rounded-full flex items-center justify-center">
         <Target className="text-slate-950 w-5 h-5" />
       </div>
-      <span className="text-xl font-extrabold tracking-tighter uppercase">AceAnalysis</span>
+      <span className="text-xl font-extrabold tracking-tighter uppercase">AceSight</span>
     </div>
     <div className="hidden md:flex gap-8 text-sm font-medium text-slate-300">
       <button onClick={() => scrollToSection('analysis-studio')} className="hover:text-white transition-colors cursor-pointer">Analysis Studio</button>
@@ -171,7 +177,7 @@ const AnalysisStudio = () => {
                     {analyzing ? (
                       <div className="flex flex-col items-center">
                         <Loader2 className="w-12 h-12 text-[#dfff00] animate-spin mb-4" />
-                        <span className="text-xl font-bold uppercase tracking-widest animate-pulse">Scanning Kinematics...</span>
+                        <span className="text-xl font-bold uppercase tracking-widest animate-pulse">Running Simulation Mode...</span>
                       </div>
                     ) : (
                       <div className="group-hover:scale-110 transition-transform">
@@ -393,7 +399,8 @@ const App: React.FC = () => {
   const [profileImgFailed, setProfileImgFailed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 selection:bg-[#dfff00] selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 selection:bg-[#dfff00] selection:text-slate-950 pt-10">
+      <NotificationBanner />
       <Navbar />
 
       {/* Hero Section */}
@@ -590,13 +597,13 @@ const App: React.FC = () => {
             <div className="w-8 h-8 tennis-gradient rounded-full flex items-center justify-center">
               <Target className="text-slate-950 w-5 h-5" />
             </div>
-            <span className="text-2xl font-black tracking-tighter uppercase italic">AceAnalysis</span>
+            <span className="text-2xl font-black tracking-tighter uppercase italic">AceSight</span>
           </div>
           <p className="text-slate-500 text-sm mb-10 max-w-sm mx-auto leading-relaxed">
             Revolutionizing tennis movement training through the power of Google Gemini AI. Movement intelligence for everyone.
           </p>
           <div className="mt-16 text-[10px] text-slate-800 font-bold uppercase tracking-widest">
-            © 2025 ACE ANALYSIS MOVEMENT LAB. ALL RIGHTS RESERVED.
+            © 2025 ACESIGHT MOVEMENT LAB. ALL RIGHTS RESERVED.
           </div>
         </div>
       </footer>
