@@ -259,7 +259,7 @@ const AnalysisStudio = ({ results, setResults }: AnalysisStudioProps) => {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1 block">Assessed Level</span>
-                    <h3 className="text-5xl font-black italic text-[#dfff00]">NTRP {results?.ntrpLevel}</h3>
+                    <h3 className="text-4xl md:text-5xl font-black italic text-[#dfff00]">NTRP {results?.ntrpLevel}</h3>
                   </div>
                   <div className="w-16 h-16 rounded-2xl bg-[#dfff00]/10 flex items-center justify-center">
                     <CheckCircle2 className="w-8 h-8 text-[#dfff00]" />
@@ -376,7 +376,7 @@ const WaitlistSection = () => {
 
   return (
     <section id="waitlist-section" className="py-24 px-6 relative scroll-mt-24">
-      <div className="max-w-4xl mx-auto dark-card rounded-[4rem] p-8 md:p-16 border-white/10 relative overflow-hidden">
+      <div className="max-w-4xl mx-auto dark-card rounded-[3rem] p-8 md:p-16 border-white/10 relative overflow-hidden">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4 text-[#dfff00]">
             <Mail className="w-5 h-5" />
@@ -483,7 +483,7 @@ const App: React.FC = () => {
             <span className="text-xs font-black uppercase tracking-[0.3em] text-[#dfff00]">Full-Body Movement Vision</span>
           </div>
           
-          <h1 className="text-6xl md:text-[9rem] font-black tracking-tighter mb-8 leading-[0.85] uppercase italic">
+          <h1 className="text-5xl md:text-[9rem] font-black tracking-tighter mb-8 leading-[0.9] md:leading-[0.85] uppercase italic">
             MAP YOUR <br />
             <span className="text-[#dfff00]">ON-COURT FLOW.</span>
           </h1>
@@ -531,7 +531,7 @@ const App: React.FC = () => {
                   {/* Certification Badge */}
                   <div className="bg-[#dfff00] p-8 rounded-[3rem] border-4 border-white/20 shadow-2xl flex flex-col justify-center items-center text-slate-950 scale-110 z-20">
                      <span className="text-[10px] font-black uppercase tracking-[0.3em] mb-1 opacity-70">Kinematic Level</span>
-                     <span className="text-8xl font-black italic tracking-tighter">3.5</span>
+                     <span className="text-6xl md:text-8xl font-black italic tracking-tighter">3.5</span>
                      <div className="flex items-center gap-1 bg-black/10 px-3 py-1 rounded-full mt-4">
                         <CheckCircle2 className="w-3 h-3" />
                         <span className="text-[10px] font-black uppercase tracking-wider">NTRP Rating</span>
@@ -649,7 +649,7 @@ const App: React.FC = () => {
 
                   <div className="text-center py-10 bg-[#dfff00]/5 rounded-[3rem] border border-[#dfff00]/10 mb-10 group-hover:bg-[#dfff00]/10 transition-colors">
                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-4 block">AceSights NTRP Rating</span>
-                    <div className="text-8xl font-black italic text-[#dfff00] tracking-tighter leading-none mb-4">
+                    <div className="text-6xl md:text-8xl font-black italic text-[#dfff00] tracking-tighter leading-none mb-4">
                       {analysisResults?.ntrpLevel || "4.5"}
                     </div>
                     <div className="inline-flex items-center gap-1.5 bg-[#dfff00] text-slate-950 px-4 py-1.5 rounded-full hover:scale-105 transition-transform">
