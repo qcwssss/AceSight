@@ -1,0 +1,5 @@
+{
+  "name": "AceAnalysis - Your AI Tennis Coach",
+  "description": "A high-performance landing page for an AI-powered tennis coaching application that uses Gemini API to analyze swing mechanics, track progress, and certify player levels.",
+  "requestFramePermissions": []
+}
