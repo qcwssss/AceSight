@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   Trophy, 
   Video, 
-  LineChart, 
   Zap, 
   Target, 
   CheckCircle2, 
@@ -14,12 +13,8 @@ import {
   Loader2,
   Mail,
   Activity,
-  Maximize2,
-  Footprints,
   Move,
   Upload,
-  ChevronRight,
-  AlertCircle
 } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
 import BackgroundImage from './assets/background.png';
@@ -343,7 +338,8 @@ const WaitlistSection = () => {
         body: JSON.stringify({
           email,
           willPay,
-          featureInterest
+          featureInterest,
+          timestamp: new Date().toISOString()
         }),
         mode: 'no-cors' // Apps Script requires no-cors for simple POST
       });
